@@ -1,45 +1,70 @@
 # CLAUDE.md
 
 必ず日本語で回答してください。
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
-ClearUp is a web application with a monorepo structure containing:
+ClearUp は割り勘・精算管理 Web アプリケーションです。グループ内での支出記録、負債計算、精算機能を提供します。
 
-- **frontend/**: React 19 + TypeScript + Vite application
-- **backend/**: Go 1.25 API server using Gin framework with GORM/SQLite
+モノレポ構成:
+
+- **frontend/**: React 19 + TypeScript + Vite
+- **backend/**: Go API server (Gin + GORM/SQLite)
 
 ## Commands
 
-### Frontend (run from `frontend/` directory)
+### Frontend (`frontend/` ディレクトリで実行)
 
 ```bash
-npm run dev      # Start development server with HMR
-npm run build    # TypeScript compile + Vite build
-npm run lint     # Run ESLint
-npm run preview  # Preview production build
+npm run dev      # 開発サーバー起動 (HMR)
+npm run build    # TypeScript + Vite ビルド
+npm run lint     # ESLint 実行
 ```
 
-### Backend (run from `backend/` directory)
+### Backend (`backend/` ディレクトリで実行)
 
 ```bash
-go run .         # Run the server
-go build         # Build the binary
-go test ./...    # Run all tests
+go run .         # サーバー起動 (localhost:8080)
+go build         # バイナリビルド
+go test ./...    # 全テスト実行
+go test -v ./handler  # 特定パッケージのテスト
 ```
 
 ## Architecture
 
-### Frontend Stack
+### Backend 構造
 
-- **React 19** with TypeScript
-- **Vite 7** for bundling and dev server
-- **Zustand** for state management
-- **React Router v7** for routing
-- **Axios** for HTTP requests
+```
+backend/
+├── main.go              # エントリーポイント (JWT初期化 → DB初期化 → Router設定)
+├── router/router.go     # APIルート定義 (/api/v1/...)
+├── handler/             # HTTPハンドラー (auth, group, expense)
+├── middleware/          # 認証ミドルウェア (JWT検証)
+├── models/models.go     # GORMモデル定義
+├── database/db.go       # SQLite接続・マイグレーション
+└── utils/jwt.go         # JWT生成・検証
+```
 
-### Backend Stack
+**データモデル**: User → Group (owner) → Membership, Expense → Split, Settlement
 
-- **Gin** web framework
-- **GORM** ORM with SQLite driver
+**API 構成**:
+
+- 認証不要: `/api/v1/auth/` (register, login, logout)
+- 認証必要: `/api/v1/groups/` (グループ・支出・精算 CRUD)
+
+### Frontend 構造
+
+```
+frontend/src/
+├── App.tsx              # ルーティング (PrivateRoute/PublicRoute)
+├── stores/authStore.ts  # Zustand認証状態 (token, user)
+├── pages/               # ページコンポーネント
+│   ├── auth/            # Login, Register
+│   ├── groups/          # Groups一覧, GroupHistory
+│   └── dashboard/       # Dashboard
+└── components/          # UI部品 (GroupCreateForm, ExpenseModal, DebtSummary等)
+```
+
+**認証フロー**: localStorage 保存 → useAuthStore → PrivateRoute 保護
