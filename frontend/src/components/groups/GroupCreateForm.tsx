@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../../stores/authStore';
 
 interface GroupCreateFormProps {
   onSuccess?: (group: { id: number; name: string; ownerID: number }) => void;

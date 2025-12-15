@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
-import GroupCreateForm from '../components/GroupCreateForm';
+import { useAuthStore } from '../../../stores/authStore';
+import GroupCreateForm from '../../../components/groups/GroupCreateForm';
 
 // ダミーデータ（APIが実装されるまでの仮データ）
 const dummyGroups = [

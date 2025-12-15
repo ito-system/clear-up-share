@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuthStore } from './store/authStore';
-import Register from './pages/Register';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import Groups from './pages/Groups';
-import GroupHistory from './pages/GroupHistory';
+import { useAuthStore } from './stores/authStore';
+import Register from './pages/auth/Register';
+import Login from './pages/auth/Login';
+import Dashboard from './pages/dashboard/Dashboard';
+import Groups from './pages/groups/Groups';
+import GroupHistory from './pages/groups/GroupHistory';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = useAuthStore((state) => state.token);

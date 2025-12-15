@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuthStore } from '../store/authStore';
-import ExpenseModal from '../components/ExpenseModal';
-import DebtSummary from '../components/DebtSummary';
-import SettlementModal from '../components/SettlementModal';
+import { useAuthStore } from '../../../stores/authStore';
+import ExpenseModal from '../../../components/expenses/ExpenseModal';
+import DebtSummary from '../../../components/debts/DebtSummary';
+import SettlementModal from '../../../components/debts/SettlementModal';
 
 interface HistoryItem {
   id: number;

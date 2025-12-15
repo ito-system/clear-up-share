@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../../../stores/authStore';
 
 export default function Dashboard() {
   const navigate = useNavigate();
