@@ -4,8 +4,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/ito-system/clear-up-share/backend/models"
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
@@ -14,6 +16,7 @@ import (
 )
 
 var db *gorm.DB
+var jwtSecret []byte
 
 // RegisterInput はユーザー登録リクエストの入力形式
 type RegisterInput struct {
@@ -95,6 +98,18 @@ func RegisterUser(c *gin.Context) {
 	})
 }
 
+// generateJWT はユーザーIDを含むJWTトークンを生成します
+func generateJWT(userID uint) (string, error) {
+	claims := jwt.MapClaims{
+		"userID": userID,
+		"exp":    time.Now().Add(time.Hour * 1).Unix(), // 1時間後に有効期限切れ
+		"iat":    time.Now().Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(jwtSecret)
+}
+
 // LoginUser はログインを処理します
 // POST /api/v1/auth/login
 func LoginUser(c *gin.Context) {
@@ -117,8 +132,15 @@ func LoginUser(c *gin.Context) {
 		return
 	}
 
+	// JWTトークンを生成
+	token, err := generateJWT(user.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Login successful",
+		"token": token,
 		"user": gin.H{
 			"id":       user.ID,
 			"username": user.Username,
@@ -127,11 +149,26 @@ func LoginUser(c *gin.Context) {
 	})
 }
 
+// LogoutUser はログアウトを処理します
+// POST /api/v1/auth/logout
+func LogoutUser(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Logged out successfully",
+	})
+}
+
 func main() {
 	// 環境変数をロード
 	if err := godotenv.Load(); err != nil {
 		log.Println("Warning: .env file not found, using default values")
 	}
+
+	// JWTシークレットを読み込み
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		log.Fatal("JWT_SECRET environment variable is required")
+	}
+	jwtSecret = []byte(secret)
 
 	// データベース初期化
 	initDB()
@@ -146,6 +183,7 @@ func main() {
 		{
 			auth.POST("/register", RegisterUser)
 			auth.POST("/login", LoginUser)
+			auth.POST("/logout", LogoutUser)
 		}
 	}
 
