@@ -3,6 +3,8 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 import ExpenseModal from '../components/ExpenseModal';
+import DebtSummary from '../components/DebtSummary';
+import SettlementModal from '../components/SettlementModal';
 
 interface HistoryItem {
   id: number;
@@ -56,6 +58,12 @@ export default function GroupHistory() {
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState<ExpenseData | null>(null);
+
+  // Settlement Modal state
+  const [isSettlementModalOpen, setIsSettlementModalOpen] = useState(false);
+
+  // Debt summary refresh trigger
+  const [debtRefreshTrigger, setDebtRefreshTrigger] = useState(0);
 
   // Delete confirmation
   const [deletingId, setDeletingId] = useState<number | null>(null);
@@ -181,6 +189,12 @@ export default function GroupHistory() {
 
   const handleModalSuccess = () => {
     fetchHistory();
+    setDebtRefreshTrigger((prev) => prev + 1);
+  };
+
+  const handleSettlementSuccess = () => {
+    fetchHistory();
+    setDebtRefreshTrigger((prev) => prev + 1);
   };
 
   return (
@@ -250,6 +264,15 @@ export default function GroupHistory() {
             </svg>
             新しい支出を追加
           </button>
+        </div>
+
+        {/* 負債サマリー */}
+        <div className="mb-6">
+          <DebtSummary
+            groupID={groupID || ''}
+            onSettleClick={() => setIsSettlementModalOpen(true)}
+            refreshTrigger={debtRefreshTrigger}
+          />
         </div>
 
         {loading ? (
@@ -437,6 +460,15 @@ export default function GroupHistory() {
         groupID={groupID || ''}
         members={members}
         editData={editingExpense}
+      />
+
+      {/* 清算モーダル */}
+      <SettlementModal
+        isOpen={isSettlementModalOpen}
+        onClose={() => setIsSettlementModalOpen(false)}
+        onSuccess={handleSettlementSuccess}
+        groupID={groupID || ''}
+        members={members}
       />
     </div>
   );

@@ -48,6 +48,20 @@ type AddExpenseInput struct {
 	MemberIDs   []uint  `json:"memberIDs" binding:"required,min=1"`
 }
 
+// AddSettlementInput は清算記録リクエストの入力形式
+type AddSettlementInput struct {
+	PayerID    uint    `json:"payerID" binding:"required"`
+	ReceiverID uint    `json:"receiverID" binding:"required"`
+	Amount     float64 `json:"amount" binding:"required,gt=0"`
+}
+
+// DebtSummary はメンバーごとの貸借額を表す形式
+type DebtSummary struct {
+	UserID   uint    `json:"userID"`
+	Username string  `json:"username"`
+	Balance  float64 `json:"balance"`
+}
+
 // HistoryItem は履歴アイテムの統合形式
 type HistoryItem struct {
 	ID           uint      `json:"id"`
@@ -696,6 +710,195 @@ func DeleteExpense(c *gin.Context) {
 	})
 }
 
+// GetGroupDebts はグループの負債状態を計算します
+// GET /api/v1/groups/:groupID/debts
+func GetGroupDebts(c *gin.Context) {
+	// パスパラメータからgroupIDを取得
+	groupIDStr := c.Param("groupID")
+	groupID, err := strconv.ParseUint(groupIDStr, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid group ID"})
+		return
+	}
+
+	// コンテキストからuserIDを取得
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+
+	// ユーザーがグループのメンバーであることを確認
+	var membership models.Membership
+	if err := db.Where("user_id = ? AND group_id = ?", userID, groupID).First(&membership).Error; err != nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not a member of this group"})
+		return
+	}
+
+	// グループのメンバーを取得
+	var memberships []models.Membership
+	if err := db.Preload("User").Where("group_id = ?", groupID).Find(&memberships).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch members"})
+		return
+	}
+
+	// メンバー情報をマップに保存
+	memberMap := make(map[uint]string)
+	balances := make(map[uint]float64)
+	for _, m := range memberships {
+		memberMap[m.UserID] = m.User.Username
+		balances[m.UserID] = 0
+	}
+
+	// グループの全支出を取得
+	var expenses []models.Expense
+	if err := db.Where("group_id = ?", groupID).Find(&expenses).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch expenses"})
+		return
+	}
+
+	// 支出IDのリストを作成
+	var expenseIDs []uint
+	for _, e := range expenses {
+		expenseIDs = append(expenseIDs, e.ID)
+	}
+
+	// 全てのSplitを取得
+	var splits []models.Split
+	if len(expenseIDs) > 0 {
+		if err := db.Where("expense_id IN ?", expenseIDs).Find(&splits).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch splits"})
+			return
+		}
+	}
+
+	// 支払額を集計（Expense.PayerIDごと）
+	for _, e := range expenses {
+		balances[e.PayerID] += e.Amount
+	}
+
+	// 負担額を集計（Split.DebtorIDごと）
+	for _, s := range splits {
+		balances[s.DebtorID] -= s.AmountDue
+	}
+
+	// 清算を考慮（Settlement）
+	var settlements []models.Settlement
+	if err := db.Where("group_id = ?", groupID).Find(&settlements).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch settlements"})
+		return
+	}
+
+	// 清算による調整
+	// Payerは送金した（＝支払った）ので、その分負債が減る（balanceが減る）
+	// Receiverは受け取った（＝受領した）ので、その分債権が減る（balanceが減る）
+	for _, s := range settlements {
+		balances[s.PayerID] -= s.Amount    // 送金者は支払ったので、受け取る権利が減る
+		balances[s.ReceiverID] += s.Amount // 受領者は受け取ったので、支払う義務が減る（balanceが増える）
+	}
+
+	// DebtSummaryのリストを作成
+	var debts []DebtSummary
+	for userID, username := range memberMap {
+		debts = append(debts, DebtSummary{
+			UserID:   userID,
+			Username: username,
+			Balance:  balances[userID],
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"groupID": groupID,
+		"debts":   debts,
+	})
+}
+
+// RecordSettlement は清算を記録します
+// POST /api/v1/groups/:groupID/settlements
+func RecordSettlement(c *gin.Context) {
+	// パスパラメータからgroupIDを取得
+	groupIDStr := c.Param("groupID")
+	groupID, err := strconv.ParseUint(groupIDStr, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid group ID"})
+		return
+	}
+
+	// コンテキストからuserIDを取得
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+
+	// ユーザーがグループのメンバーであることを確認
+	var membership models.Membership
+	if err := db.Where("user_id = ? AND group_id = ?", userID, groupID).First(&membership).Error; err != nil {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not a member of this group"})
+		return
+	}
+
+	// リクエストボディをバインド
+	var input AddSettlementInput
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// PayerとReceiverが同じでないことを確認
+	if input.PayerID == input.ReceiverID {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Payer and receiver cannot be the same"})
+		return
+	}
+
+	// PayerがグループのメンバーであることをPayerがグループのメンバーであることを確認
+	var payerMembership models.Membership
+	if err := db.Where("user_id = ? AND group_id = ?", input.PayerID, groupID).First(&payerMembership).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Payer is not a member of this group"})
+		return
+	}
+
+	// ReceiverがグループのメンバーであることをReceiverがグループのメンバーであることを確認
+	var receiverMembership models.Membership
+	if err := db.Where("user_id = ? AND group_id = ?", input.ReceiverID, groupID).First(&receiverMembership).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Receiver is not a member of this group"})
+		return
+	}
+
+	// Settlementを作成
+	settlement := models.Settlement{
+		GroupID:    uint(groupID),
+		PayerID:    input.PayerID,
+		ReceiverID: input.ReceiverID,
+		Amount:     input.Amount,
+	}
+
+	if err := db.Create(&settlement).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create settlement"})
+		return
+	}
+
+	// Payer, Receiverの情報を取得してレスポンスに含める
+	var payer models.User
+	var receiver models.User
+	db.First(&payer, input.PayerID)
+	db.First(&receiver, input.ReceiverID)
+
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "Settlement recorded successfully",
+		"settlement": gin.H{
+			"id":           settlement.ID,
+			"groupID":      settlement.GroupID,
+			"payerID":      settlement.PayerID,
+			"payerName":    payer.Username,
+			"receiverID":   settlement.ReceiverID,
+			"receiverName": receiver.Username,
+			"amount":       settlement.Amount,
+			"createdAt":    settlement.CreatedAt,
+		},
+	})
+}
+
 func main() {
 	// JWTシークレットを読み込み
 	secret := os.Getenv("JWT_SECRET")
@@ -732,6 +935,8 @@ func main() {
 			groups.POST("/:groupID/expenses", AddExpense)
 			groups.PUT("/:groupID/expenses/:expenseID", EditExpense)
 			groups.DELETE("/:groupID/expenses/:expenseID", DeleteExpense)
+			groups.GET("/:groupID/debts", GetGroupDebts)
+			groups.POST("/:groupID/settlements", RecordSettlement)
 		}
 	}
 
