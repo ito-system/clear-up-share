@@ -39,7 +39,7 @@ export default function Groups() {
               onClick={handleLogout}
               className="text-red-600 hover:text-red-800 text-sm"
             >
-              Logout
+              ログアウト
             </button>
           </div>
         </div>

@@ -26,7 +26,7 @@ export default function Dashboard() {
               onClick={handleLogout}
               className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors"
             >
-              Logout
+              ログアウト
             </button>
           </div>
         </div>
@@ -38,10 +38,10 @@ export default function Dashboard() {
             {user?.username ? `${user.username}` : 'User'}
           </h2>
           <p className="text-gray-600">
-            Welcome to ClearUp Dashboard. Your account is active.
+            ClearUpへようこそ。アカウントは有効です。
           </p>
           <div className="mt-4 p-4 bg-gray-50 rounded-md">
-            <h3 className="font-medium text-gray-700 mb-2">Account Info</h3>
+            <h3 className="font-medium text-gray-700 mb-2">アカウント情報</h3>
             <p className="text-sm text-gray-600">Email: {user?.email}</p>
             <p className="text-sm text-gray-600">User ID: {user?.id}</p>
           </div>

@@ -26,7 +26,7 @@ export default function Register() {
       if (axios.isAxiosError(err) && err.response?.data?.error) {
         setError(err.response.data.error);
       } else {
-        setError('Registration failed. Please try again.');
+        setError('登録に失敗しました。もう一度お試しください。');
       }
     } finally {
       setLoading(false);
@@ -37,7 +37,7 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
-          Create Account
+          新規登録
         </h1>
 
         {error && (
@@ -95,14 +95,14 @@ export default function Register() {
             disabled={loading}
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-blue-400 transition-colors"
           >
-            {loading ? 'Registering...' : 'Register'}
+            {loading ? '登録中...' : '登録する'}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 hover:underline">
-            Login
+          すでにアカウントをお持ちの方は{' '}
+          <Link to="/login" className="text-blue-600 hover:underline font-medium">
+            ログイン
           </Link>
         </p>
       </div>

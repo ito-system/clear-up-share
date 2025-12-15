@@ -29,7 +29,7 @@ export default function Login() {
       if (axios.isAxiosError(err) && err.response?.data?.error) {
         setError(err.response.data.error);
       } else {
-        setError('Login failed. Please try again.');
+        setError('ログインに失敗しました。もう一度お試しください。');
       }
     } finally {
       setLoading(false);
@@ -40,7 +40,7 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
-          Login
+          ClearUp
         </h1>
 
         {error && (
@@ -83,14 +83,14 @@ export default function Login() {
             disabled={loading}
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-blue-400 transition-colors"
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? 'ログイン中...' : 'ログイン'}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-blue-600 hover:underline">
-            Register
+          アカウントをお持ちでない方は{' '}
+          <Link to="/register" className="text-blue-600 hover:underline font-medium">
+            新規登録
           </Link>
         </p>
       </div>
