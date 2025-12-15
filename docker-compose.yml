@@ -1,0 +1,68 @@
+services:
+  # 1. PostgreSQL データベースサービス
+  db:
+    image: postgres:16-alpine
+    container_name: clearup_db
+    restart: always
+    environment:
+      # .envの内容と合わせる
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      # ローカルの5432ポートを公開 (Postico 2接続用)
+      - "5432:5432" 
+    volumes:
+      # データを永続化
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      
+  # 2. Go バックエンドサービス
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: clearup_backend
+    restart: always
+    environment:
+      # DB接続情報の環境変数をコンテナに渡す
+      DB_HOST: db # Dockerネットワーク内のサービス名
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
+      PORT: ${PORT}
+    ports:
+      - "8080:8080"
+    depends_on:
+      # DBが起動してからバックエンドを起動する
+      db:
+        condition: service_healthy
+    # 開発中はローカルのコードをマウントすることで、コンテナを再ビルドせず変更を反映できます
+    volumes:
+      - ./backend:/app 
+      
+  # 3. React フロントエンドサービス
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: clearup_frontend
+    # 開発中はローカルのコードをマウント
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # node_modulesはホストからマウントしない（コンテナ内で生成したものを使用）
+    ports:
+      - "5173:5173"
+    environment:
+      # Vite開発サーバーでHMR (Hot Module Replacement) を有効にするための設定
+      VITE_HMR_HOST: localhost 
+      VITE_HMR_PORT: 5173
+    # Goバックエンドが起動するのを待つ必要はないため、depends_onは省略
+
+volumes:
+  postgres_data:

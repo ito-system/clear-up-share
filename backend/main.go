@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -12,9 +13,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/ito-system/clear-up-share/backend/models"
-	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -41,28 +41,35 @@ type CreateGroupInput struct {
 
 // HistoryItem は履歴アイテムの統合形式
 type HistoryItem struct {
-	ID          uint      `json:"id"`
-	Type        string    `json:"type"` // "expense" または "settlement"
-	Date        time.Time `json:"date"`
-	Amount      float64   `json:"amount"`
-	Description string    `json:"description,omitempty"`
-	PayerID     uint      `json:"payerID"`
-	PayerName   string    `json:"payerName"`
-	ReceiverID  uint      `json:"receiverID,omitempty"`
-	ReceiverName string   `json:"receiverName,omitempty"`
+	ID           uint      `json:"id"`
+	Type         string    `json:"type"` // "expense" または "settlement"
+	Date         time.Time `json:"date"`
+	Amount       float64   `json:"amount"`
+	Description  string    `json:"description,omitempty"`
+	PayerID      uint      `json:"payerID"`
+	PayerName    string    `json:"payerName"`
+	ReceiverID   uint      `json:"receiverID,omitempty"`
+	ReceiverName string    `json:"receiverName,omitempty"`
 }
 
 // initDB はデータベース接続を初期化し、マイグレーションを実行します
 func initDB() {
-	dbName := os.Getenv("DB_NAME")
-	if dbName == "" {
-		dbName = "clearup.db"
-	}
+	// 環境変数からPostgreSQL接続用のDSN (Data Source Name) を構築
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"),
+		os.Getenv("DB_PORT"),
+	)
+
+	log.Printf("Connecting to DB with DSN: %s", dsn)
 
 	var err error
-	db, err = gorm.Open(sqlite.Open(dbName), &gorm.Config{})
+	// PostgreSQLに接続
+	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Failed to connect to database:", err)
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
 	// マイグレーション実行
@@ -75,7 +82,7 @@ func initDB() {
 		&models.Settlement{},
 	)
 	if err != nil {
-		log.Fatal("Failed to migrate database:", err)
+		log.Fatalf("Failed to migrate database: %v", err)
 	}
 
 	log.Println("Database connected and migrated successfully")
@@ -368,15 +375,11 @@ func GetGroupHistory(c *gin.Context) {
 }
 
 func main() {
-	// 環境変数をロード
-	if err := godotenv.Load(); err != nil {
-		log.Println("Warning: .env file not found, using default values")
-	}
-
 	// JWTシークレットを読み込み
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
-		log.Fatal("JWT_SECRET environment variable is required")
+		log.Println("Warning: JWT_SECRET not set, using default value for development")
+		secret = "default-secret-for-dev"
 	}
 	jwtSecret = []byte(secret)
 

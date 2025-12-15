@@ -43,4 +43,3 @@ go test ./...    # Run all tests
 
 - **Gin** web framework
 - **GORM** ORM with SQLite driver
-- **godotenv** for environment configuration
