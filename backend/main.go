@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/gin-gonic/gin"
 	"github.com/ito-system/clear-up-share/backend/models"
 
 	"github.com/joho/godotenv"
@@ -51,36 +50,19 @@ func initDB() *gorm.DB {
 	return db
 }
 
-func RegisterUser(c *gin.Context, db *gorm.DB) {
-	c.JSON(200, gin.H{"message": "Registration endpoint ready! (Implementation pending)"})
-}
-
 func main() {
 	// データベースの初期化と接続（サーバー起動の準備）
 	db := initDB()
 
-	// Ginルーターを初期化
-	router := gin.Default()
+	// サーバーの設定と起動はここから実装します
+	log.Println("Database initialized. Ready to start Gin server...")
 
-	v1 := router.Group("/api/v1")
-	{
-		auth := v1.Group("/auth")
-		{
-			// ユーザー登録エンドポイント
-			// クロージャを利用してdbインスタンスをハンドラに渡す
-			auth.POST("/register", func(c *gin.Context) {
-				RegisterUser(c, db)
-			})
-			// auth.POST("/login", LoginUser) // 今後の実装
-		}
-		// ... 他のAPIグループ（/groupsなど）もここに設定 ...
-	}
+	// 今後のステップ: Ginルーターの設定、APIエンドポイントの実装
+	// ...
 
-	// サーバーを起動
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080" // デフォルトポート
-	}
-	log.Printf("Starting Gin server on :%s", port)
-	log.Fatal(router.Run(":" + port)) // ポート8080で起動
+	// 仮のサーバー起動メッセージ
+	// log.Fatal(router.Run(":8080"))
+
+	// dbが未使用だとエラーになるため一時的に利用
+	_ = db
 }
