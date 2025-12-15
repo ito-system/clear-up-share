@@ -4,6 +4,8 @@ import { useAuthStore } from './store/authStore';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Groups from './pages/Groups';
+import GroupHistory from './pages/GroupHistory';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = useAuthStore((state) => state.token);
@@ -12,7 +14,7 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const token = useAuthStore((state) => state.token);
-  return token ? <Navigate to="/dashboard" replace /> : <>{children}</>;
+  return token ? <Navigate to="/groups" replace /> : <>{children}</>;
 }
 
 function App() {
@@ -24,7 +26,7 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<Navigate to="/groups" replace />} />
       <Route
         path="/register"
         element={
@@ -46,6 +48,22 @@ function App() {
         element={
           <PrivateRoute>
             <Dashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/groups"
+        element={
+          <PrivateRoute>
+            <Groups />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/groups/:groupID/history"
+        element={
+          <PrivateRoute>
+            <GroupHistory />
           </PrivateRoute>
         }
       />
