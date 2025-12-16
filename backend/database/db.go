@@ -13,18 +13,27 @@ import (
 // DB はグローバルなデータベース接続を保持します
 var DB *gorm.DB
 
+// getEnvOrDefault は環境変数を取得し、設定されていない場合はデフォルト値を返します
+func getEnvOrDefault(key, defaultValue string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return defaultValue
+}
+
 // InitDB はデータベース接続を初期化し、マイグレーションを実行します
 func InitDB() {
 	// 環境変数からPostgreSQL接続用のDSN (Data Source Name) を構築
+	// 環境変数が設定されていない場合はローカル開発用のデフォルト値を使用
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_NAME"),
-		os.Getenv("DB_PORT"),
+		getEnvOrDefault("DB_HOST", "localhost"),
+		getEnvOrDefault("DB_USER", "clearup_user"),
+		getEnvOrDefault("DB_PASSWORD", "clearup_password"),
+		getEnvOrDefault("DB_NAME", "clearup_db"),
+		getEnvOrDefault("DB_PORT", "5432"),
 	)
 
-	log.Printf("Connecting to DB with DSN: %s", dsn)
+	log.Printf("Connecting to DB...")
 
 	var err error
 	// PostgreSQLに接続

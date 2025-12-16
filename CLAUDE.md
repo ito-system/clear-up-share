@@ -11,7 +11,7 @@ ClearUp は割り勘・精算管理 Web アプリケーションです。グル�
 モノレポ構成:
 
 - **frontend/**: React 19 + TypeScript + Vite
-- **backend/**: Go API server (Gin + GORM/SQLite)
+- **backend/**: Go API server (Gin + GORM/PostgreSQL)
 
 ## Commands
 
@@ -43,7 +43,7 @@ backend/
 ├── handler/             # HTTPハンドラー (auth, group, expense)
 ├── middleware/          # 認証ミドルウェア (JWT検証)
 ├── models/models.go     # GORMモデル定義
-├── database/db.go       # SQLite接続・マイグレーション
+├── database/db.go       # PostgreSQL接続・マイグレーション
 └── utils/jwt.go         # JWT生成・検証
 ```
 

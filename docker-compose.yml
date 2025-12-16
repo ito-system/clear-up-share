@@ -60,9 +60,12 @@ services:
       - "5173:5173"
     environment:
       # Vite開発サーバーでHMR (Hot Module Replacement) を有効にするための設定
-      VITE_HMR_HOST: localhost 
+      VITE_HMR_HOST: localhost
       VITE_HMR_PORT: 5173
-    # Goバックエンドが起動するのを待つ必要はないため、depends_onは省略
+      # Docker内ではbackendコンテナ名でAPIに接続
+      VITE_API_URL: http://backend:8080
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
