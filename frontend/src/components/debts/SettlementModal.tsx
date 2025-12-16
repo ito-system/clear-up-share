@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuthStore } from '../../stores/authStore';
+import './SettlementModal.css';
 
 interface Member {
   id: number;
@@ -106,23 +107,20 @@ export default function SettlementModal({
   const parsedAmount = parseFloat(amount) || 0;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div className="settlement-modal">
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
+      <div className="settlement-modal-backdrop" onClick={onClose} />
 
       {/* Modal */}
-      <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative w-full max-w-md transform rounded-2xl bg-white shadow-2xl transition-all">
+      <div className="settlement-modal-wrapper">
+        <div className="settlement-modal-content">
           {/* Header */}
-          <div className="border-b border-gray-100 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+          <div className="settlement-modal-header">
+            <div className="settlement-modal-header-inner">
+              <div className="settlement-modal-header-left">
+                <div className="settlement-modal-icon-wrapper">
                   <svg
-                    className="w-5 h-5 text-white"
+                    className="settlement-modal-icon"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -135,16 +133,11 @@ export default function SettlementModal({
                     />
                   </svg>
                 </div>
-                <h2 className="text-xl font-semibold text-gray-900">
-                  清算を記録
-                </h2>
+                <h2 className="settlement-modal-title">清算を記録</h2>
               </div>
-              <button
-                onClick={onClose}
-                className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
-              >
+              <button onClick={onClose} className="settlement-modal-close-btn">
                 <svg
-                  className="h-5 w-5"
+                  className="settlement-modal-close-icon"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -162,32 +155,26 @@ export default function SettlementModal({
 
           {/* Form */}
           <form onSubmit={handleSubmit}>
-            <div className="px-6 py-5 space-y-5">
+            <div className="settlement-modal-body">
               {/* Error */}
-              {error && (
-                <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-                  {error}
-                </div>
-              )}
+              {error && <div className="settlement-form-error">{error}</div>}
 
               {/* Visual Preview */}
               {payerID > 0 && receiverID > 0 && parsedAmount > 0 && (
-                <div className="rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 p-4">
-                  <div className="flex items-center justify-center gap-3">
-                    <div className="text-center">
-                      <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-semibold">
+                <div className="settlement-preview">
+                  <div className="settlement-preview-inner">
+                    <div className="settlement-preview-user">
+                      <div className="settlement-preview-avatar payer">
                         {payerName?.charAt(0).toUpperCase()}
                       </div>
-                      <p className="mt-1 text-sm font-medium text-gray-700">
-                        {payerName}
-                      </p>
+                      <p className="settlement-preview-name">{payerName}</p>
                     </div>
-                    <div className="flex flex-col items-center">
-                      <span className="text-lg font-bold text-emerald-600">
+                    <div className="settlement-preview-center">
+                      <span className="settlement-preview-amount">
                         ¥{formatAmount(parsedAmount)}
                       </span>
                       <svg
-                        className="w-8 h-8 text-emerald-500"
+                        className="settlement-preview-arrow"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -200,13 +187,11 @@ export default function SettlementModal({
                         />
                       </svg>
                     </div>
-                    <div className="text-center">
-                      <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold">
+                    <div className="settlement-preview-user">
+                      <div className="settlement-preview-avatar receiver">
                         {receiverName?.charAt(0).toUpperCase()}
                       </div>
-                      <p className="mt-1 text-sm font-medium text-gray-700">
-                        {receiverName}
-                      </p>
+                      <p className="settlement-preview-name">{receiverName}</p>
                     </div>
                   </div>
                 </div>
@@ -214,10 +199,10 @@ export default function SettlementModal({
 
               {/* Payer (who paid/sent money) */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  <span className="flex items-center gap-1">
+                <label className="settlement-form-label">
+                  <span className="settlement-form-label-inner">
                     <svg
-                      className="w-4 h-4 text-amber-500"
+                      className="settlement-form-label-icon payer"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -235,7 +220,7 @@ export default function SettlementModal({
                 <select
                   value={payerID}
                   onChange={(e) => setPayerID(Number(e.target.value))}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                  className="settlement-form-select"
                 >
                   <option value={0}>選択してください</option>
                   {members.map((member) => (
@@ -249,10 +234,10 @@ export default function SettlementModal({
 
               {/* Receiver (who received money) */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  <span className="flex items-center gap-1">
+                <label className="settlement-form-label">
+                  <span className="settlement-form-label-inner">
                     <svg
-                      className="w-4 h-4 text-blue-500"
+                      className="settlement-form-label-icon receiver"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -270,7 +255,7 @@ export default function SettlementModal({
                 <select
                   value={receiverID}
                   onChange={(e) => setReceiverID(Number(e.target.value))}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                  className="settlement-form-select"
                 >
                   <option value={0}>選択してください</option>
                   {members
@@ -286,13 +271,9 @@ export default function SettlementModal({
 
               {/* Amount */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  金額
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
-                    ¥
-                  </span>
+                <label className="settlement-form-label">金額</label>
+                <div className="settlement-form-input-wrapper">
+                  <span className="settlement-form-input-prefix">¥</span>
                   <input
                     type="number"
                     value={amount}
@@ -300,39 +281,39 @@ export default function SettlementModal({
                     placeholder="0"
                     min="0"
                     step="1"
-                    className="w-full rounded-lg border border-gray-300 pl-8 pr-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                    className="settlement-form-input"
                   />
                 </div>
               </div>
 
               {/* Help Text */}
-              <div className="rounded-lg bg-gray-50 px-4 py-3">
-                <p className="text-xs text-gray-500">
-                  <span className="font-medium text-gray-700">ヒント:</span>{' '}
+              <div className="settlement-help-text">
+                <p className="settlement-help-text-content">
+                  <span className="settlement-help-text-label">ヒント:</span>{' '}
                   借りを返済した場合、支払った人が「送金者」、お金を受け取った人が「受取者」になります。
                 </p>
               </div>
             </div>
 
             {/* Footer */}
-            <div className="border-t border-gray-100 px-6 py-4 flex justify-end gap-3">
+            <div className="settlement-modal-footer">
               <button
                 type="button"
                 onClick={onClose}
                 disabled={loading}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500/20 transition-all disabled:opacity-50"
+                className="settlement-btn-secondary"
               >
                 キャンセル
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg hover:from-emerald-600 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="settlement-btn-primary"
               >
                 {loading ? (
-                  <span className="flex items-center gap-2">
+                  <span className="settlement-btn-loading">
                     <svg
-                      className="animate-spin h-4 w-4"
+                      className="settlement-btn-spinner"
                       fill="none"
                       viewBox="0 0 24 24"
                     >

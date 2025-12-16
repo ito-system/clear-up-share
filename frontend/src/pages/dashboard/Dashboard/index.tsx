@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuthStore } from '../../../stores/authStore';
+import './Dashboard.css';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -17,33 +18,30 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <h1 className="text-xl font-semibold text-gray-800">ClearUp</h1>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors"
-            >
+    <div className="dashboard-page">
+      <nav className="dashboard-nav">
+        <div className="dashboard-nav-inner">
+          <div className="dashboard-nav-content">
+            <h1 className="dashboard-nav-title">ClearUp</h1>
+            <button onClick={handleLogout} className="dashboard-logout-btn">
               ログアウト
             </button>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+      <main className="dashboard-main">
+        <div className="dashboard-card">
+          <h2 className="dashboard-card-title">
             {user?.username ? `${user.username}` : 'User'}
           </h2>
-          <p className="text-gray-600">
+          <p className="dashboard-card-description">
             ClearUpへようこそ。アカウントは有効です。
           </p>
-          <div className="mt-4 p-4 bg-gray-50 rounded-md">
-            <h3 className="font-medium text-gray-700 mb-2">アカウント情報</h3>
-            <p className="text-sm text-gray-600">Email: {user?.email}</p>
-            <p className="text-sm text-gray-600">User ID: {user?.id}</p>
+          <div className="dashboard-account-info">
+            <h3 className="dashboard-account-title">アカウント情報</h3>
+            <p className="dashboard-account-detail">Email: {user?.email}</p>
+            <p className="dashboard-account-detail">User ID: {user?.id}</p>
           </div>
         </div>
       </main>

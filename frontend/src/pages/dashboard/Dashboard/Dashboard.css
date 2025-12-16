@@ -1,0 +1,57 @@
+@reference "tailwindcss";
+
+/* Dashboard.css */
+
+.dashboard-page {
+  @apply min-h-screen bg-gray-100;
+}
+
+/* Navigation */
+.dashboard-nav {
+  @apply bg-white shadow-sm;
+}
+
+.dashboard-nav-inner {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.dashboard-nav-content {
+  @apply flex justify-between h-16 items-center;
+}
+
+.dashboard-nav-title {
+  @apply text-xl font-semibold text-gray-800;
+}
+
+.dashboard-logout-btn {
+  @apply bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors;
+}
+
+/* Main Content */
+.dashboard-main {
+  @apply max-w-7xl mx-auto py-6 sm:px-6 lg:px-8;
+}
+
+.dashboard-card {
+  @apply bg-white rounded-lg shadow-md p-6;
+}
+
+.dashboard-card-title {
+  @apply text-2xl font-bold text-gray-800 mb-4;
+}
+
+.dashboard-card-description {
+  @apply text-gray-600;
+}
+
+.dashboard-account-info {
+  @apply mt-4 p-4 bg-gray-50 rounded-md;
+}
+
+.dashboard-account-title {
+  @apply font-medium text-gray-700 mb-2;
+}
+
+.dashboard-account-detail {
+  @apply text-sm text-gray-600;
+}

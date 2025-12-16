@@ -1,0 +1,263 @@
+@reference "tailwindcss";
+
+/* GroupHistory.css */
+
+/* Layout */
+.history-page {
+  @apply min-h-screen bg-gradient-to-br from-gray-50 to-gray-100;
+}
+
+/* Header */
+.history-header {
+  @apply bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-40;
+}
+
+.history-header-inner {
+  @apply max-w-4xl mx-auto px-4 py-4 flex justify-between items-center;
+}
+
+.history-header-left {
+  @apply flex items-center gap-4;
+}
+
+.history-back-link {
+  @apply flex items-center gap-1 text-gray-500 hover:text-gray-700 transition-colors;
+}
+
+.history-back-icon {
+  @apply w-5 h-5;
+}
+
+.history-back-text {
+  @apply text-sm;
+}
+
+.history-header-divider {
+  @apply h-6 w-px bg-gray-200;
+}
+
+.history-header-title {
+  @apply text-xl font-bold text-gray-800;
+}
+
+.history-header-right {
+  @apply flex items-center gap-4;
+}
+
+.history-header-username {
+  @apply text-sm text-gray-600;
+}
+
+.history-header-logout {
+  @apply text-red-500 hover:text-red-600 text-sm font-medium transition-colors;
+}
+
+/* Main Content */
+.history-main {
+  @apply max-w-4xl mx-auto px-4 py-8;
+}
+
+/* Members & Add Button Section */
+.history-top-section {
+  @apply mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4;
+}
+
+.history-members {
+  @apply flex items-center gap-2;
+}
+
+.history-members-label {
+  @apply text-sm text-gray-500;
+}
+
+.history-members-avatars {
+  @apply flex -space-x-2;
+}
+
+.history-member-avatar {
+  @apply w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xs font-medium ring-2 ring-white;
+}
+
+.history-member-avatar-more {
+  @apply w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-xs font-medium ring-2 ring-white;
+}
+
+.history-members-count {
+  @apply text-sm text-gray-400;
+}
+
+.history-add-expense-btn {
+  @apply inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white text-sm font-medium rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 shadow-lg shadow-blue-500/25 transition-all;
+}
+
+.history-add-expense-icon {
+  @apply w-5 h-5;
+}
+
+/* Debt Summary Section */
+.history-debt-summary {
+  @apply mb-6;
+}
+
+/* Loading */
+.history-loading {
+  @apply bg-white rounded-2xl shadow-sm p-12 text-center;
+}
+
+.history-loading-inner {
+  @apply inline-flex items-center gap-3 text-gray-500;
+}
+
+.history-loading-spinner {
+  @apply animate-spin h-5 w-5;
+}
+
+/* Error */
+.history-error {
+  @apply bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl;
+}
+
+/* Empty State */
+.history-empty {
+  @apply bg-white rounded-2xl shadow-sm p-12 text-center;
+}
+
+.history-empty-icon-wrapper {
+  @apply w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center;
+}
+
+.history-empty-icon {
+  @apply w-8 h-8 text-gray-400;
+}
+
+.history-empty-text {
+  @apply text-gray-500 mb-4;
+}
+
+.history-empty-link {
+  @apply text-blue-600 hover:text-blue-700 text-sm font-medium;
+}
+
+/* History List */
+.history-list {
+  @apply space-y-3;
+}
+
+/* History Item */
+.history-item {
+  @apply bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden;
+}
+
+.history-item-inner {
+  @apply p-4 flex items-center gap-4;
+}
+
+.history-item-icon-wrapper {
+  @apply w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0;
+}
+
+.history-item-icon-wrapper.expense {
+  @apply bg-blue-50 text-blue-600;
+}
+
+.history-item-icon-wrapper.settlement {
+  @apply bg-green-50 text-green-600;
+}
+
+.history-item-icon {
+  @apply w-6 h-6;
+}
+
+.history-item-content {
+  @apply flex-1 min-w-0;
+}
+
+.history-item-header {
+  @apply flex items-start justify-between gap-2;
+}
+
+.history-item-title {
+  @apply font-medium text-gray-900 truncate;
+}
+
+.history-item-meta {
+  @apply flex items-center gap-2 mt-1;
+}
+
+.history-item-badge {
+  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+}
+
+.history-item-badge.expense {
+  @apply bg-blue-100 text-blue-700;
+}
+
+.history-item-badge.settlement {
+  @apply bg-green-100 text-green-700;
+}
+
+.history-item-date {
+  @apply text-xs text-gray-400;
+}
+
+.history-item-payer {
+  @apply text-xs text-gray-400;
+}
+
+.history-item-amount-wrapper {
+  @apply text-right flex-shrink-0;
+}
+
+.history-item-amount {
+  @apply text-lg font-semibold;
+}
+
+.history-item-amount.expense {
+  @apply text-blue-600;
+}
+
+.history-item-amount.settlement {
+  @apply text-green-600;
+}
+
+/* Action Buttons */
+.history-item-actions {
+  @apply flex items-center gap-1 flex-shrink-0;
+}
+
+.history-item-action-btn {
+  @apply p-2 text-gray-400 rounded-lg transition-colors;
+}
+
+.history-item-action-btn.edit {
+  @apply hover:text-blue-600 hover:bg-blue-50;
+}
+
+.history-item-action-btn.delete {
+  @apply hover:text-red-600 hover:bg-red-50;
+}
+
+.history-item-action-icon {
+  @apply w-4 h-4;
+}
+
+/* Delete Confirmation */
+.history-delete-confirm {
+  @apply border-t border-gray-100 px-4 py-3 bg-red-50 flex items-center justify-between;
+}
+
+.history-delete-confirm-text {
+  @apply text-sm text-red-700;
+}
+
+.history-delete-confirm-actions {
+  @apply flex items-center gap-2;
+}
+
+.history-delete-cancel-btn {
+  @apply px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800 transition-colors;
+}
+
+.history-delete-confirm-btn {
+  @apply px-3 py-1.5 text-sm text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors disabled:opacity-50;
+}

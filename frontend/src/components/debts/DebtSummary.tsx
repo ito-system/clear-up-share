@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useAuthStore } from '../../stores/authStore';
+import './DebtSummary.css';
 
 interface DebtItem {
   userID: number;
@@ -82,16 +83,16 @@ export default function DebtSummary({
   const myBalance = myDebt?.balance || 0;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+    <div className="debt-summary">
       {/* ヘッダー */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-5 py-4 flex items-center justify-between bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 transition-colors"
+        className="debt-summary-header"
       >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+        <div className="debt-summary-header-left">
+          <div className="debt-summary-icon-wrapper">
             <svg
-              className="w-5 h-5 text-white"
+              className="debt-summary-icon"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -105,16 +106,14 @@ export default function DebtSummary({
             </svg>
           </div>
           <div className="text-left">
-            <h3 className="font-semibold text-gray-900">Balance Summary</h3>
-            <p className="text-xs text-gray-500">
+            <h3 className="debt-summary-title">Balance Summary</h3>
+            <p className="debt-summary-subtitle">
               {isAllSettled ? '全員清算済み' : `${creditors.length + debtors.length}件の未清算`}
             </p>
           </div>
         </div>
         <svg
-          className={`w-5 h-5 text-gray-400 transition-transform ${
-            isExpanded ? 'rotate-180' : ''
-          }`}
+          className={`debt-summary-chevron ${isExpanded ? 'expanded' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -130,11 +129,11 @@ export default function DebtSummary({
 
       {/* コンテンツ */}
       {isExpanded && (
-        <div className="p-5">
+        <div className="debt-summary-content">
           {loading ? (
-            <div className="flex items-center justify-center py-8">
+            <div className="debt-summary-loading">
               <svg
-                className="animate-spin h-6 w-6 text-emerald-500"
+                className="debt-summary-spinner"
                 fill="none"
                 viewBox="0 0 24 24"
               >
@@ -154,14 +153,12 @@ export default function DebtSummary({
               </svg>
             </div>
           ) : error ? (
-            <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-              {error}
-            </div>
+            <div className="debt-summary-error">{error}</div>
           ) : isAllSettled ? (
-            <div className="text-center py-6">
-              <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-emerald-100 flex items-center justify-center">
+            <div className="debt-summary-settled">
+              <div className="debt-summary-settled-icon-wrapper">
                 <svg
-                  className="w-8 h-8 text-emerald-600"
+                  className="debt-summary-settled-icon"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -174,33 +171,25 @@ export default function DebtSummary({
                   />
                 </svg>
               </div>
-              <p className="text-gray-600 font-medium">全員清算済みです</p>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="debt-summary-settled-title">全員清算済みです</p>
+              <p className="debt-summary-settled-subtitle">
                 未払いの残高はありません
               </p>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="debt-summary-list">
               {/* 自分のステータス */}
               {myDebt && Math.abs(myBalance) > 0.01 && (
                 <div
-                  className={`rounded-xl p-4 ${
-                    myBalance > 0
-                      ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100'
-                      : 'bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100'
-                  }`}
+                  className={`my-status-card ${myBalance > 0 ? 'creditor' : 'debtor'}`}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="my-status-inner">
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                        myBalance > 0
-                          ? 'bg-blue-100 text-blue-600'
-                          : 'bg-amber-100 text-amber-600'
-                      }`}
+                      className={`my-status-icon-wrapper ${myBalance > 0 ? 'creditor' : 'debtor'}`}
                     >
                       {myBalance > 0 ? (
                         <svg
-                          className="w-5 h-5"
+                          className="my-status-icon"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -214,7 +203,7 @@ export default function DebtSummary({
                         </svg>
                       ) : (
                         <svg
-                          className="w-5 h-5"
+                          className="my-status-icon"
                           fill="none"
                           viewBox="0 0 24 24"
                           stroke="currentColor"
@@ -228,20 +217,16 @@ export default function DebtSummary({
                         </svg>
                       )}
                     </div>
-                    <div className="flex-1">
+                    <div className="my-status-content">
                       <p
-                        className={`text-sm font-medium ${
-                          myBalance > 0 ? 'text-blue-800' : 'text-amber-800'
-                        }`}
+                        className={`my-status-label ${myBalance > 0 ? 'creditor' : 'debtor'}`}
                       >
                         {myBalance > 0
                           ? 'あなたは受け取れます'
                           : 'あなたが支払う金額'}
                       </p>
                       <p
-                        className={`text-2xl font-bold ${
-                          myBalance > 0 ? 'text-blue-600' : 'text-amber-600'
-                        }`}
+                        className={`my-status-amount ${myBalance > 0 ? 'creditor' : 'debtor'}`}
                       >
                         {formatAmount(myBalance)}
                       </p>
@@ -253,9 +238,9 @@ export default function DebtSummary({
               {/* 受け取る人（債権者） */}
               {creditors.length > 0 && (
                 <div>
-                  <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 flex items-center gap-1">
+                  <h4 className="section-header">
                     <svg
-                      className="w-4 h-4 text-blue-500"
+                      className="section-header-icon creditor"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -269,26 +254,21 @@ export default function DebtSummary({
                     </svg>
                     受け取る人
                   </h4>
-                  <div className="space-y-2">
+                  <div className="user-list">
                     {creditors.map((item) => (
-                      <div
-                        key={item.userID}
-                        className="flex items-center justify-between px-4 py-3 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-sm font-medium">
+                      <div key={item.userID} className="user-list-item creditor">
+                        <div className="user-list-item-left">
+                          <div className="user-avatar creditor">
                             {item.username.charAt(0).toUpperCase()}
                           </div>
-                          <span className="font-medium text-gray-900">
+                          <span className="user-name">
                             {item.username}
                             {item.userID === user?.id && (
-                              <span className="ml-1 text-xs text-blue-500">
-                                (自分)
-                              </span>
+                              <span className="user-badge creditor">(自分)</span>
                             )}
                           </span>
                         </div>
-                        <span className="font-semibold text-blue-600">
+                        <span className="user-amount creditor">
                           +{formatAmount(item.balance)}
                         </span>
                       </div>
@@ -300,9 +280,9 @@ export default function DebtSummary({
               {/* 支払う人（債務者） */}
               {debtors.length > 0 && (
                 <div>
-                  <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 flex items-center gap-1">
+                  <h4 className="section-header">
                     <svg
-                      className="w-4 h-4 text-amber-500"
+                      className="section-header-icon debtor"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -316,26 +296,21 @@ export default function DebtSummary({
                     </svg>
                     支払う人
                   </h4>
-                  <div className="space-y-2">
+                  <div className="user-list">
                     {debtors.map((item) => (
-                      <div
-                        key={item.userID}
-                        className="flex items-center justify-between px-4 py-3 rounded-lg bg-amber-50 hover:bg-amber-100 transition-colors"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-sm font-medium">
+                      <div key={item.userID} className="user-list-item debtor">
+                        <div className="user-list-item-left">
+                          <div className="user-avatar debtor">
                             {item.username.charAt(0).toUpperCase()}
                           </div>
-                          <span className="font-medium text-gray-900">
+                          <span className="user-name">
                             {item.username}
                             {item.userID === user?.id && (
-                              <span className="ml-1 text-xs text-amber-600">
-                                (自分)
-                              </span>
+                              <span className="user-badge debtor">(自分)</span>
                             )}
                           </span>
                         </div>
-                        <span className="font-semibold text-amber-600">
+                        <span className="user-amount debtor">
                           {formatAmount(item.balance)}
                         </span>
                       </div>
@@ -347,9 +322,9 @@ export default function DebtSummary({
               {/* 清算済みメンバー */}
               {settled.length > 0 && (
                 <div>
-                  <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 flex items-center gap-1">
+                  <h4 className="section-header">
                     <svg
-                      className="w-4 h-4 text-emerald-500"
+                      className="section-header-icon settled"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -363,18 +338,15 @@ export default function DebtSummary({
                     </svg>
                     清算済み
                   </h4>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="settled-users">
                     {settled.map((item) => (
-                      <span
-                        key={item.userID}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 text-sm text-gray-600"
-                      >
-                        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center text-white text-xs font-medium">
+                      <span key={item.userID} className="settled-user-badge">
+                        <div className="settled-user-avatar">
                           {item.username.charAt(0).toUpperCase()}
                         </div>
                         {item.username}
                         {item.userID === user?.id && (
-                          <span className="text-xs text-gray-400">(自分)</span>
+                          <span className="settled-user-self">(自分)</span>
                         )}
                       </span>
                     ))}
@@ -383,12 +355,9 @@ export default function DebtSummary({
               )}
 
               {/* 清算ボタン */}
-              <button
-                onClick={onSettleClick}
-                className="w-full mt-4 inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-sm font-medium rounded-xl hover:from-emerald-600 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 shadow-lg shadow-emerald-500/25 transition-all"
-              >
+              <button onClick={onSettleClick} className="settle-btn">
                 <svg
-                  className="w-5 h-5"
+                  className="settle-btn-icon"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"

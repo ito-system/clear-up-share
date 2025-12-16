@@ -1,0 +1,258 @@
+@reference "tailwindcss";
+
+/* DebtSummary.css */
+
+.debt-summary {
+  @apply bg-white rounded-2xl shadow-sm overflow-hidden;
+}
+
+/* Header */
+.debt-summary-header {
+  @apply w-full px-5 py-4 flex items-center justify-between bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 transition-colors;
+}
+
+.debt-summary-header-left {
+  @apply flex items-center gap-3;
+}
+
+.debt-summary-icon-wrapper {
+  @apply w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center;
+}
+
+.debt-summary-icon {
+  @apply w-5 h-5 text-white;
+}
+
+.debt-summary-title {
+  @apply font-semibold text-gray-900;
+}
+
+.debt-summary-subtitle {
+  @apply text-xs text-gray-500;
+}
+
+.debt-summary-chevron {
+  @apply w-5 h-5 text-gray-400 transition-transform;
+}
+
+.debt-summary-chevron.expanded {
+  @apply rotate-180;
+}
+
+/* Content */
+.debt-summary-content {
+  @apply p-5;
+}
+
+/* Loading */
+.debt-summary-loading {
+  @apply flex items-center justify-center py-8;
+}
+
+.debt-summary-spinner {
+  @apply animate-spin h-6 w-6 text-emerald-500;
+}
+
+/* Error */
+.debt-summary-error {
+  @apply rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700;
+}
+
+/* All Settled */
+.debt-summary-settled {
+  @apply text-center py-6;
+}
+
+.debt-summary-settled-icon-wrapper {
+  @apply w-16 h-16 mx-auto mb-3 rounded-full bg-emerald-100 flex items-center justify-center;
+}
+
+.debt-summary-settled-icon {
+  @apply w-8 h-8 text-emerald-600;
+}
+
+.debt-summary-settled-title {
+  @apply text-gray-600 font-medium;
+}
+
+.debt-summary-settled-subtitle {
+  @apply text-sm text-gray-400 mt-1;
+}
+
+/* Debt List */
+.debt-summary-list {
+  @apply space-y-4;
+}
+
+/* My Status */
+.my-status-card {
+  @apply rounded-xl p-4;
+}
+
+.my-status-card.creditor {
+  @apply bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100;
+}
+
+.my-status-card.debtor {
+  @apply bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-100;
+}
+
+.my-status-inner {
+  @apply flex items-center gap-3;
+}
+
+.my-status-icon-wrapper {
+  @apply w-10 h-10 rounded-full flex items-center justify-center;
+}
+
+.my-status-icon-wrapper.creditor {
+  @apply bg-blue-100 text-blue-600;
+}
+
+.my-status-icon-wrapper.debtor {
+  @apply bg-amber-100 text-amber-600;
+}
+
+.my-status-icon {
+  @apply w-5 h-5;
+}
+
+.my-status-content {
+  @apply flex-1;
+}
+
+.my-status-label {
+  @apply text-sm font-medium;
+}
+
+.my-status-label.creditor {
+  @apply text-blue-800;
+}
+
+.my-status-label.debtor {
+  @apply text-amber-800;
+}
+
+.my-status-amount {
+  @apply text-2xl font-bold;
+}
+
+.my-status-amount.creditor {
+  @apply text-blue-600;
+}
+
+.my-status-amount.debtor {
+  @apply text-amber-600;
+}
+
+/* Section Headers */
+.section-header {
+  @apply text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 flex items-center gap-1;
+}
+
+.section-header-icon {
+  @apply w-4 h-4;
+}
+
+.section-header-icon.creditor {
+  @apply text-blue-500;
+}
+
+.section-header-icon.debtor {
+  @apply text-amber-500;
+}
+
+.section-header-icon.settled {
+  @apply text-emerald-500;
+}
+
+/* User List */
+.user-list {
+  @apply space-y-2;
+}
+
+.user-list-item {
+  @apply flex items-center justify-between px-4 py-3 rounded-lg transition-colors;
+}
+
+.user-list-item.creditor {
+  @apply bg-blue-50 hover:bg-blue-100;
+}
+
+.user-list-item.debtor {
+  @apply bg-amber-50 hover:bg-amber-100;
+}
+
+.user-list-item-left {
+  @apply flex items-center gap-3;
+}
+
+.user-avatar {
+  @apply w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium;
+}
+
+.user-avatar.creditor {
+  @apply bg-gradient-to-br from-blue-400 to-blue-600;
+}
+
+.user-avatar.debtor {
+  @apply bg-gradient-to-br from-amber-400 to-orange-500;
+}
+
+.user-avatar.settled {
+  @apply bg-gradient-to-br from-gray-300 to-gray-400;
+}
+
+.user-name {
+  @apply font-medium text-gray-900;
+}
+
+.user-badge {
+  @apply ml-1 text-xs;
+}
+
+.user-badge.creditor {
+  @apply text-blue-500;
+}
+
+.user-badge.debtor {
+  @apply text-amber-600;
+}
+
+.user-amount {
+  @apply font-semibold;
+}
+
+.user-amount.creditor {
+  @apply text-blue-600;
+}
+
+.user-amount.debtor {
+  @apply text-amber-600;
+}
+
+/* Settled Users */
+.settled-users {
+  @apply flex flex-wrap gap-2;
+}
+
+.settled-user-badge {
+  @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 text-sm text-gray-600;
+}
+
+.settled-user-avatar {
+  @apply w-5 h-5 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center text-white text-xs font-medium;
+}
+
+.settled-user-self {
+  @apply text-xs text-gray-400;
+}
+
+/* Settle Button */
+.settle-btn {
+  @apply w-full mt-4 inline-flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-sm font-medium rounded-xl hover:from-emerald-600 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 shadow-lg shadow-emerald-500/25 transition-all;
+}
+
+.settle-btn-icon {
+  @apply w-5 h-5;
+}

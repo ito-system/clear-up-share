@@ -1,0 +1,114 @@
+@reference "tailwindcss";
+
+/* groups.css - グループ関連ページ共通スタイル */
+
+/* Layout */
+.groups-page {
+  @apply min-h-screen bg-gray-100;
+}
+
+/* Header */
+.groups-header {
+  @apply bg-white shadow;
+}
+
+.groups-header-inner {
+  @apply max-w-4xl mx-auto px-4 py-4 flex justify-between items-center;
+}
+
+.groups-header-title {
+  @apply text-xl font-bold text-gray-800;
+}
+
+.groups-header-user {
+  @apply flex items-center gap-4;
+}
+
+.groups-header-username {
+  @apply text-gray-600;
+}
+
+.groups-header-logout {
+  @apply text-red-600 hover:text-red-800 text-sm;
+}
+
+/* Main Content */
+.groups-main {
+  @apply max-w-4xl mx-auto px-4 py-8;
+}
+
+.groups-main-header {
+  @apply flex justify-between items-center mb-6;
+}
+
+.groups-main-title {
+  @apply text-2xl font-bold text-gray-800;
+}
+
+.groups-create-btn {
+  @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors;
+}
+
+/* Modal */
+.groups-modal-overlay {
+  @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50;
+}
+
+.groups-modal-content {
+  @apply bg-white rounded-lg p-6 w-full max-w-md mx-4;
+}
+
+.groups-modal-header {
+  @apply flex justify-between items-center mb-4;
+}
+
+.groups-modal-title {
+  @apply text-lg font-bold text-gray-800;
+}
+
+.groups-modal-close {
+  @apply text-gray-500 hover:text-gray-700;
+}
+
+/* Loading */
+.groups-loading {
+  @apply bg-white rounded-lg shadow p-8 text-center;
+}
+
+.groups-loading-inner {
+  @apply inline-flex items-center gap-3 text-gray-500;
+}
+
+.groups-loading-spinner {
+  @apply animate-spin h-5 w-5;
+}
+
+/* Empty State */
+.groups-empty {
+  @apply bg-white rounded-lg shadow p-8 text-center;
+}
+
+.groups-empty-text {
+  @apply text-gray-500;
+}
+
+/* Group List */
+.groups-list {
+  @apply grid gap-4;
+}
+
+.groups-list-item {
+  @apply bg-white rounded-lg shadow p-4 flex justify-between items-center hover:shadow-md transition-shadow;
+}
+
+.groups-list-item-name {
+  @apply text-lg font-semibold text-gray-800;
+}
+
+.groups-list-item-badge {
+  @apply text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded;
+}
+
+.groups-list-item-link {
+  @apply text-blue-600 hover:text-blue-800 hover:underline;
+}

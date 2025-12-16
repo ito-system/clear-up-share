@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuthStore } from '../../stores/authStore';
+import './ExpenseModal.css';
 
 interface Member {
   id: number;
@@ -156,28 +157,22 @@ export default function ExpenseModal({
       : 0;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div className="modal-container">
       {/* Backdrop */}
-      <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      />
+      <div className="modal-backdrop" onClick={onClose} />
 
       {/* Modal */}
-      <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative w-full max-w-lg transform rounded-2xl bg-white shadow-2xl transition-all">
+      <div className="modal-content-wrapper">
+        <div className="modal-content">
           {/* Header */}
-          <div className="border-b border-gray-100 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">
+          <div className="modal-header">
+            <div className="modal-header-inner">
+              <h2 className="modal-title">
                 {isEditMode ? '支出を編集' : '新しい支出を追加'}
               </h2>
-              <button
-                onClick={onClose}
-                className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
-              >
+              <button onClick={onClose} className="modal-close-btn">
                 <svg
-                  className="h-5 w-5"
+                  className="modal-close-icon"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -195,37 +190,27 @@ export default function ExpenseModal({
 
           {/* Form */}
           <form onSubmit={handleSubmit}>
-            <div className="px-6 py-4 space-y-5">
+            <div className="modal-form-body">
               {/* Error */}
-              {error && (
-                <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-                  {error}
-                </div>
-              )}
+              {error && <div className="form-error">{error}</div>}
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  内容
-                </label>
+                <label className="form-label">内容</label>
                 <input
                   type="text"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="例: 夕食代、交通費"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                  className="form-input"
                 />
               </div>
 
               {/* Amount */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  金額
-                </label>
+                <label className="form-label">金額</label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
-                    ¥
-                  </span>
+                  <span className="input-prefix">¥</span>
                   <input
                     type="number"
                     value={amount}
@@ -233,100 +218,107 @@ export default function ExpenseModal({
                     placeholder="0"
                     min="0"
                     step="1"
-                    className="w-full rounded-lg border border-gray-300 pl-8 pr-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                    className="form-input-with-prefix"
                   />
                 </div>
               </div>
 
               {/* Date */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  日付
-                </label>
+                <label className="form-label">日付</label>
                 <input
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
+                  className="form-input"
                 />
               </div>
 
               {/* Payer */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  支払い者
-                </label>
-                <select
-                  value={payerID}
-                  onChange={(e) => setPayerID(Number(e.target.value))}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all"
-                >
-                  <option value={0}>選択してください</option>
-                  {members.map((member) => (
-                    <option key={member.id} value={member.id}>
-                      {member.username}
-                      {member.id === user?.id && ' (自分)'}
-                    </option>
-                  ))}
-                </select>
+                <label className="form-label">支払い者</label>
+                <div className="relative">
+                  <select
+                    value={payerID}
+                    onChange={(e) => setPayerID(Number(e.target.value))}
+                    className="form-select"
+                  >
+                    <option value={0}>選択してください</option>
+                    {members.map((member) => (
+                      <option key={member.id} value={member.id}>
+                        {member.username}
+                        {member.id === user?.id && ' (自分)'}
+                      </option>
+                    ))}
+                  </select>
+                  <svg
+                    className="select-arrow"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
               </div>
 
               {/* Split Members */}
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-sm font-medium text-gray-700">
-                    負担者（均等割り）
-                  </label>
-                  <div className="flex gap-2">
+                <div className="member-list-header">
+                  <label className="form-label">負担者（均等割り）</label>
+                  <div className="member-list-actions">
                     <button
                       type="button"
                       onClick={handleSelectAll}
-                      className="text-xs text-blue-600 hover:text-blue-800 transition-colors"
+                      className="member-list-action-btn"
                     >
                       全選択
                     </button>
-                    <span className="text-gray-300">|</span>
+                    <span className="member-list-divider">|</span>
                     <button
                       type="button"
                       onClick={handleDeselectAll}
-                      className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+                      className="member-list-action-btn-secondary"
                     >
                       全解除
                     </button>
                   </div>
                 </div>
-                <div className="rounded-lg border border-gray-200 divide-y divide-gray-100 max-h-40 overflow-y-auto">
+                <div className="member-list-container">
                   {members.map((member) => (
-                    <label
-                      key={member.id}
-                      className="flex items-center justify-between px-4 py-2.5 hover:bg-gray-50 cursor-pointer transition-colors"
-                    >
-                      <div className="flex items-center gap-3">
+                    <label key={member.id} className="member-list-item">
+                      <div className="member-list-item-left">
                         <input
                           type="checkbox"
                           checked={selectedMemberIDs.includes(member.id)}
                           onChange={() => handleMemberToggle(member.id)}
-                          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          className="member-checkbox"
                         />
-                        <span className="text-sm text-gray-900">
+                        <span className="member-name">
                           {member.username}
                           {member.id === user?.id && (
-                            <span className="text-gray-400 ml-1">(自分)</span>
+                            <span className="member-name-suffix">(自分)</span>
                           )}
                         </span>
                       </div>
-                      {selectedMemberIDs.includes(member.id) && splitAmount > 0 && (
-                        <span className="text-sm text-gray-500">
-                          ¥{Math.round(splitAmount).toLocaleString()}
-                        </span>
-                      )}
+                      {selectedMemberIDs.includes(member.id) &&
+                        splitAmount > 0 && (
+                          <span className="member-split-amount">
+                            ¥{Math.round(splitAmount).toLocaleString()}
+                          </span>
+                        )}
                     </label>
                   ))}
                 </div>
                 {selectedMemberIDs.length > 0 && parseFloat(amount) > 0 && (
-                  <p className="mt-2 text-xs text-gray-500 text-right">
+                  <p className="split-summary">
                     {selectedMemberIDs.length}人で均等割り →{' '}
-                    <span className="font-medium text-gray-700">
+                    <span className="split-summary-highlight">
                       1人あたり ¥{Math.round(splitAmount).toLocaleString()}
                     </span>
                   </p>
@@ -335,27 +327,19 @@ export default function ExpenseModal({
             </div>
 
             {/* Footer */}
-            <div className="border-t border-gray-100 px-6 py-4 flex justify-end gap-3">
+            <div className="modal-footer">
               <button
                 type="button"
                 onClick={onClose}
                 disabled={loading}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500/20 transition-all disabled:opacity-50"
+                className="btn-secondary"
               >
                 キャンセル
               </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+              <button type="submit" disabled={loading} className="btn-primary">
                 {loading ? (
-                  <span className="flex items-center gap-2">
-                    <svg
-                      className="animate-spin h-4 w-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
+                  <span className="btn-loading-content">
+                    <svg className="btn-spinner" fill="none" viewBox="0 0 24 24">
                       <circle
                         className="opacity-25"
                         cx="12"
