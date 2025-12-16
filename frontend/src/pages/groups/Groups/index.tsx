@@ -1,29 +1,57 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { useAuthStore } from '../../../stores/authStore';
 import GroupCreateForm from '../../../components/groups/GroupCreateForm';
 
-// ダミーデータ（APIが実装されるまでの仮データ）
-const dummyGroups = [
-  { id: 1, name: '旅行グループ', ownerID: 1 },
-  { id: 2, name: '飲み会メンバー', ownerID: 2 },
-  { id: 3, name: 'ルームシェア', ownerID: 1 },
-];
+interface Group {
+  id: number;
+  name: string;
+  ownerID: number;
+}
+
+interface GroupsResponse {
+  groups: Group[];
+}
 
 export default function Groups() {
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
+  const token = useAuthStore((state) => state.token);
   const user = useAuthStore((state) => state.user);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [groups, setGroups] = useState(dummyGroups);
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchGroups = useCallback(async () => {
+    try {
+      const response = await axios.get<GroupsResponse>('/api/v1/groups', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setGroups(response.data.groups || []);
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 401) {
+        logout();
+        navigate('/login');
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [token, logout, navigate]);
+
+  useEffect(() => {
+    fetchGroups();
+  }, [fetchGroups]);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
-  const handleGroupCreated = (newGroup: { id: number; name: string; ownerID: number }) => {
-    setGroups([...groups, newGroup]);
+  const handleGroupCreated = () => {
+    fetchGroups();
     setShowCreateForm(false);
   };
 
@@ -79,7 +107,21 @@ export default function Groups() {
         )}
 
         {/* グループリスト */}
-        {groups.length === 0 ? (
+        {loading ? (
+          <div className="bg-white rounded-lg shadow p-8 text-center">
+            <div className="inline-flex items-center gap-3 text-gray-500">
+              <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+              読み込み中...
+            </div>
+          </div>
+        ) : groups.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-8 text-center">
             <p className="text-gray-500">まだグループがありません。</p>
             <p className="text-gray-500 mt-2">新しいグループを作成してください。</p>

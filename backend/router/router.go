@@ -25,6 +25,7 @@ func SetupRouter() *gin.Engine {
 		groups := v1.Group("/groups")
 		groups.Use(middleware.AuthMiddleware())
 		{
+			groups.GET("", handler.GetGroups)
 			groups.POST("", handler.CreateGroup)
 			groups.GET("/:groupID/history", handler.GetGroupHistory)
 			groups.GET("/:groupID/members", handler.GetGroupMembers)

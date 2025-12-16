@@ -43,6 +43,44 @@ type HistoryItem struct {
 	ReceiverName string    `json:"receiverName,omitempty"`
 }
 
+// GetGroups はユーザーが所属するグループ一覧を取得します
+// GET /api/v1/groups
+func GetGroups(c *gin.Context) {
+	// コンテキストからuserIDを取得
+	userID, exists := c.Get("userID")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+		return
+	}
+
+	// ユーザーが所属するグループを取得
+	var memberships []models.Membership
+	if err := database.DB.Preload("Group").Where("user_id = ?", userID).Find(&memberships).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch groups"})
+		return
+	}
+
+	// レスポンス用のグループリストを構築
+	type GroupResponse struct {
+		ID      uint   `json:"id"`
+		Name    string `json:"name"`
+		OwnerID uint   `json:"ownerID"`
+	}
+
+	groups := make([]GroupResponse, len(memberships))
+	for i, m := range memberships {
+		groups[i] = GroupResponse{
+			ID:      m.Group.ID,
+			Name:    m.Group.Name,
+			OwnerID: m.Group.OwnerID,
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"groups": groups,
+	})
+}
+
 // CreateGroup はグループを作成します
 // POST /api/v1/groups
 func CreateGroup(c *gin.Context) {
