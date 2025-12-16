@@ -47,7 +47,7 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="auth-form">
           <div>
             <label htmlFor="email" className="auth-label">
-              Email
+              メールアドレス
             </label>
             <input
               id="email"
@@ -62,7 +62,7 @@ export default function Login() {
 
           <div>
             <label htmlFor="password" className="auth-label">
-              Password
+              パスワード
             </label>
             <input
               id="password"

@@ -106,7 +106,7 @@ export default function DebtSummary({
             </svg>
           </div>
           <div className="text-left">
-            <h3 className="debt-summary-title">Balance Summary</h3>
+            <h3 className="debt-summary-title">精算サマリー</h3>
             <p className="debt-summary-subtitle">
               {isAllSettled ? '全員清算済み' : `${creditors.length + debtors.length}件の未清算`}
             </p>

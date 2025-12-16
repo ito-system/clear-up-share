@@ -44,7 +44,7 @@ export default function Register() {
         <form onSubmit={handleSubmit} className="auth-form">
           <div>
             <label htmlFor="username" className="auth-label">
-              Username
+              ユーザー名
             </label>
             <input
               id="username"
@@ -59,7 +59,7 @@ export default function Register() {
 
           <div>
             <label htmlFor="email" className="auth-label">
-              Email
+              メールアドレス
             </label>
             <input
               id="email"
@@ -74,7 +74,7 @@ export default function Register() {
 
           <div>
             <label htmlFor="password" className="auth-label">
-              Password
+              パスワード
             </label>
             <input
               id="password"

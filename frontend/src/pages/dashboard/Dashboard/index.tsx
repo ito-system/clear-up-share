@@ -40,8 +40,8 @@ export default function Dashboard() {
           </p>
           <div className="dashboard-account-info">
             <h3 className="dashboard-account-title">アカウント情報</h3>
-            <p className="dashboard-account-detail">Email: {user?.email}</p>
-            <p className="dashboard-account-detail">User ID: {user?.id}</p>
+            <p className="dashboard-account-detail">メールアドレス: {user?.email}</p>
+            <p className="dashboard-account-detail">ユーザーID: {user?.id}</p>
           </div>
         </div>
       </main>

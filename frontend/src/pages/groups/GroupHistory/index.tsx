@@ -207,15 +207,15 @@ export default function GroupHistory() {
               <svg className="history-back-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              <span className="history-back-text">Groups</span>
+              <span className="history-back-text">グループ一覧</span>
             </Link>
             <div className="history-header-divider" />
-            <h1 className="history-header-title">History</h1>
+            <h1 className="history-header-title">履歴</h1>
           </div>
           <div className="history-header-right">
             <span className="history-header-username">{user?.username}</span>
             <button onClick={handleLogout} className="history-header-logout">
-              Logout
+              ログアウト
             </button>
           </div>
         </div>
@@ -227,7 +227,7 @@ export default function GroupHistory() {
         <div className="history-top-section">
           {/* メンバー一覧 */}
           <div className="history-members">
-            <span className="history-members-label">Members:</span>
+            <span className="history-members-label">メンバー:</span>
             <div className="history-members-avatars">
               {members.slice(0, 5).map((member, index) => (
                 <div
@@ -342,7 +342,7 @@ export default function GroupHistory() {
                           </span>
                           <span className="history-item-date">{formatDate(item.date)}</span>
                           {item.type === 'expense' && (
-                            <span className="history-item-payer">paid by {item.payerName}</span>
+                            <span className="history-item-payer">{item.payerName} が支払い</span>
                           )}
                         </div>
                       </div>
