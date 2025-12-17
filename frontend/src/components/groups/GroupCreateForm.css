@@ -15,7 +15,7 @@
 }
 
 .form-input {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+  @apply w-full px-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-400;
 }
 
 .form-actions {
@@ -23,9 +23,9 @@
 }
 
 .btn-cancel {
-  @apply flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors;
+  @apply flex-1 bg-white/80 text-gray-700 py-2.5 px-4 rounded-xl border border-gray-200 hover:bg-white transition-all;
 }
 
 .btn-submit {
-  @apply flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-blue-400 transition-colors;
+  @apply flex-1 bg-violet-500 text-white py-2.5 px-4 rounded-xl hover:bg-violet-600 disabled:bg-violet-400 shadow-lg shadow-violet-500/25 transition-all;
 }

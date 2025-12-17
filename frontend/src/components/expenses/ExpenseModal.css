@@ -17,7 +17,11 @@
 }
 
 .modal-content {
-  @apply relative w-full max-w-lg transform rounded-2xl bg-white shadow-2xl transition-all;
+  @apply relative w-full max-w-lg transform rounded-2xl transition-all;
+  background-color: rgb(255 255 255 / 0.85);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgb(255 255 255 / 0.3);
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 }
 
 /* Header */
@@ -61,11 +65,11 @@
 }
 
 .form-input {
-  @apply w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all;
+  @apply w-full rounded-xl border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-400/20 transition-all;
 }
 
 .form-input-with-prefix {
-  @apply w-full rounded-lg border border-gray-300 pl-8 pr-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all;
+  @apply w-full rounded-xl border border-gray-300 pl-8 pr-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-400/20 transition-all;
 }
 
 .input-prefix {
@@ -74,7 +78,7 @@
 
 /* Select */
 .form-select {
-  @apply w-full appearance-none rounded-lg border border-gray-300 px-4 py-2.5 pr-10 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all;
+  @apply w-full appearance-none rounded-xl border border-gray-300 px-4 py-2.5 pr-10 text-gray-900 focus:border-violet-400 focus:outline-none focus:ring-2 focus:ring-violet-400/20 transition-all;
 }
 
 .select-arrow {
@@ -91,7 +95,7 @@
 }
 
 .member-list-action-btn {
-  @apply text-xs text-blue-600 hover:text-blue-800 transition-colors;
+  @apply text-xs text-violet-500 hover:text-violet-600 transition-colors;
 }
 
 .member-list-action-btn-secondary {
@@ -115,7 +119,7 @@
 }
 
 .member-checkbox {
-  @apply h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500;
+  @apply h-4 w-4 rounded border-gray-300 text-violet-500 focus:ring-violet-400;
 }
 
 .member-name {
@@ -140,11 +144,11 @@
 
 /* Buttons */
 .btn-secondary {
-  @apply px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500/20 transition-all disabled:opacity-50;
+  @apply px-4 py-2.5 text-sm font-medium text-gray-700 bg-white/80 border border-gray-200 rounded-xl hover:bg-white focus:outline-none focus:ring-2 focus:ring-gray-500/20 transition-all disabled:opacity-50;
 }
 
 .btn-primary {
-  @apply px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply px-4 py-2.5 text-sm font-medium text-white bg-violet-500 rounded-xl hover:bg-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50 shadow-lg shadow-violet-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed;
 }
 
 .btn-loading-content {

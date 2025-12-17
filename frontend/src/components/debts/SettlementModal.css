@@ -16,7 +16,11 @@
 }
 
 .settlement-modal-content {
-  @apply relative w-full max-w-md transform rounded-2xl bg-white shadow-2xl transition-all;
+  @apply relative w-full max-w-md transform rounded-2xl transition-all;
+  background-color: rgb(255 255 255 / 0.85);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgb(255 255 255 / 0.3);
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 }
 
 /* Header */
@@ -33,7 +37,7 @@
 }
 
 .settlement-modal-icon-wrapper {
-  @apply w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center;
+  @apply w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-500 flex items-center justify-center;
 }
 
 .settlement-modal-icon {
@@ -68,7 +72,7 @@
 
 /* Visual Preview */
 .settlement-preview {
-  @apply rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-100 p-4;
+  @apply rounded-xl bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200 p-4;
 }
 
 .settlement-preview-inner {
@@ -84,7 +88,7 @@
 }
 
 .settlement-preview-avatar.payer {
-  @apply bg-gradient-to-br from-amber-400 to-orange-500;
+  @apply bg-gradient-to-br from-rose-300 to-rose-400;
 }
 
 .settlement-preview-avatar.receiver {
@@ -100,11 +104,11 @@
 }
 
 .settlement-preview-amount {
-  @apply text-lg font-bold text-emerald-600;
+  @apply text-lg font-bold text-emerald-500;
 }
 
 .settlement-preview-arrow {
-  @apply w-8 h-8 text-emerald-500;
+  @apply w-8 h-8 text-emerald-400;
 }
 
 /* Form Fields */
@@ -121,7 +125,7 @@
 }
 
 .settlement-form-label-icon.payer {
-  @apply text-amber-500;
+  @apply text-rose-400;
 }
 
 .settlement-form-label-icon.receiver {
@@ -129,7 +133,7 @@
 }
 
 .settlement-form-select {
-  @apply w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all;
+  @apply w-full rounded-xl border border-gray-300 px-4 py-2.5 text-gray-900 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/20 transition-all;
 }
 
 .settlement-form-input-wrapper {
@@ -141,7 +145,7 @@
 }
 
 .settlement-form-input {
-  @apply w-full rounded-lg border border-gray-300 pl-8 pr-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all;
+  @apply w-full rounded-xl border border-gray-300 pl-8 pr-4 py-2.5 text-gray-900 placeholder-gray-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-400/20 transition-all;
 }
 
 /* Help Text */
@@ -159,11 +163,11 @@
 
 /* Buttons */
 .settlement-btn-secondary {
-  @apply px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500/20 transition-all disabled:opacity-50;
+  @apply px-4 py-2.5 text-sm font-medium text-gray-700 bg-white/80 border border-gray-200 rounded-xl hover:bg-white focus:outline-none focus:ring-2 focus:ring-gray-500/20 transition-all disabled:opacity-50;
 }
 
 .settlement-btn-primary {
-  @apply px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-emerald-500 to-teal-600 rounded-lg hover:from-emerald-600 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-xl hover:from-emerald-500 hover:to-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 shadow-lg shadow-emerald-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed;
 }
 
 .settlement-btn-loading {

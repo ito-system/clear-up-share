@@ -3,12 +3,17 @@
 /* Dashboard.css */
 
 .dashboard-page {
-  @apply min-h-screen bg-gray-100;
+  background: linear-gradient(to bottom right, #e8e0f0, #d1f4e0);
+  min-height: 100vh;
 }
 
 /* Navigation */
 .dashboard-nav {
-  @apply bg-white shadow-sm;
+  @apply sticky top-0 z-40;
+  background-color: rgb(255 255 255 / 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgb(255 255 255 / 0.15);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
 .dashboard-nav-inner {
@@ -33,7 +38,17 @@
 }
 
 .dashboard-card {
-  @apply bg-white rounded-lg shadow-md p-6;
+  @apply rounded-2xl p-6;
+  background-color: rgb(255 255 255 / 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgb(255 255 255 / 0.25);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  transition: all 0.2s ease;
+}
+
+.dashboard-card:hover {
+  background-color: rgb(255 255 255 / 0.8);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
 .dashboard-card-title {

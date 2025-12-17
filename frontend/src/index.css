@@ -1,1 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+
+/* ========================================
+   カスタムテーマ設定 (Tailwind CSS 4)
+   ======================================== */
+@theme {
+  /* フォント */
+  --font-sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+}
+
+/* ========================================
+   グローバルスタイル
+   ======================================== */
+@layer base {
+  body {
+    @apply font-sans antialiased;
+  }
+}
